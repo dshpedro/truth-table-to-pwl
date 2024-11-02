@@ -1,3 +1,4 @@
+import os
 import subprocess
 
 def read_file(filename):
@@ -36,6 +37,7 @@ def main():
     sequence_files = split_into_files(transposed_table)
     for file in sequence_files:
         subprocess.run(['python', 'sequence_to_square_pwl.py', file])
+        os.remove(file)
 
 if __name__ == "__main__":
     main()
