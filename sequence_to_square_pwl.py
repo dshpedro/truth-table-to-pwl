@@ -12,15 +12,22 @@ def write_file(filename, pwl_data):
 
 def generate_pwl(sequence, transition_time, interval):
     pwl_data = []
+
+    # Base case, the first digit, at 0ns
     time = 0  # Start at 0ns
+    previous_digit = sequence[0]
+    # Point 1 (start), especial case of a transition point
+    pwl_data.append(f"{time}ns {previous_digit}") # *.000ns
 
     for digit in sequence:
-        # Point 1 (transition point)
-        time += transition_time
-        pwl_data.append(f"{time:.3f}ns {digit}") # *.001ns
-        # Point 2
-        time += (interval - transition_time)
-        pwl_data.append(f"{time:.3f}ns {digit}") # *.000ns
+        if digit != previous_digit:
+            # Point 2 (last point before transition)
+            pwl_data.append(f"{time}ns {previous_digit}") # *.000ns
+            # Point 1 (transition point)
+            pwl_data.append(f"{time+transition_time:.3f}ns {digit}") # *.001ns
+
+        time += interval
+        previous_digit = digit
 
     return pwl_data
 
